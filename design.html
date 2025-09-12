@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
+    <title>Kanban Board</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f7f8fb;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        /* Top Bar */
+        .navbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 5px 25px;
+            background: #fff;
+            border-bottom: 1px solid #eee;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .navbar-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .fa-apple {
+            font-size: 50px;
+            background:
+                linear-gradient(to top, #60bd45 0%, #60bd45 100%) 0% 0% / 100% 40%,
+                linear-gradient(to top, #fdb826 0%, #fdb826 100%) 0% 40% / 100% 12%,
+                linear-gradient(to top, #f5821f 0%, #f5821f 100%) 0% 52% / 100% 12%,
+                linear-gradient(to top, #e13a3e 0%, #e13a3e 100%) 0% 64% / 100% 12%,
+                linear-gradient(to top, #963c97 0%, #963c97 100%) 0% 76% / 100% 12%,
+                linear-gradient(to top, #009ddd 0%, #009ddd 100%) 0% 88% / 100% 100%;
+            background-repeat: no-repeat;
+            color: transparent;
+            background-clip: text;
+            padding: 0px 10px;
+        }
+
+        .divider {
+            width: 2px;
+            height: 30px;
+            background: #ddd;
+            margin-left: 10px;
+        }
+
+        .navbar img.logo {
+            width: 30px;
+            height: auto;
+        }
+
+        .search-box {
+            position: relative;
+            display: inline-block;
+        }
+
+        .search-box input {
+            width: 220px;
+            padding: 8px 12px 8px 40px;
+            border: none;
+            border-radius: 20px;
+            font-size: 14px;
+            outline: none;
+            color: #c9cdd0;
+        }
+
+        .search-box .search-icon {
+            position: absolute;
+            left: 5px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 24px;
+            color: #c9cdd0;
+        }
+
+        .search-box input::placeholder {
+            color: #c9cdd0;
+        }
+
+        /* Navbar styling for Analyst User and Avatar */
+        .navbar-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .navbar-right span {
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .navbar-right img.avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            overflow: hidden;
+            object-fit: cover;
+        }
+
+        /* Board */
+        .board {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 50px;
+            padding: 10px 50px 10px 50px;
+        }
+
+        .column {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .column h2 {
+            font-size: 20px;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .card {
+            background: #fff;
+            padding: 20px;
+            border-radius: 4px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .card h3 {
+            color: #636577;
+            font-size: 16px;
+            margin: 0;
+            font-weight: 600;
+        }
+
+        .card p {
+            font-size: 14px;
+            color: #babac2;
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        .avatar {
+            display: inline-block;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            color: #fff;
+            font-size: 12px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Colors for avatars */
+        .blue {
+            background: #007bff;
+        }
+
+        .purple {
+            background: #915aff;
+        }
+
+        .pink {
+            background: #c335fb;
+        }
+
+        .teal {
+            background: #37cdfb;
+        }
+
+        /* Date colors */
+        .date-red {
+            color: #f1495b;
+            font-weight: bold;
+        }
+
+        .date-green {
+            color: #56d975;
+            font-weight: bold;
+        }
+
+        .date-purple {
+            color: #9763ff;
+            font-weight: bold;
+        }
+
+        .date-gray {
+            color: #a6a9ad;
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .board {
+                display: flex;
+                flex-direction: column;
+                gap: 20px;
+                padding: 10px 20px;
+            }
+
+            .column {
+                width: 100%;
+                /* Full width on small screens */
+            }
+
+            .column h2 {
+                font-size: 18px;
+            }
+
+            .card {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <div class="navbar">
+        <div class="navbar-left">
+            <i class="fab fa-apple"></i>
+            <div class="divider"></div>
+            <div class="search-box">
+                <img src="search.svg" alt="Search" class="search-icon">
+                <input type="text" placeholder="Search for ..">
+            </div>
+        </div>
+        <div class="navbar-right">
+            <img src="profile.jpg" alt="User Avatar" class="avatar">
+            <span>Analyst User</span>
+        </div>
+    </div>
+
+    <!-- Board -->
+    <div class="board">
+        <!-- Backlog -->
+        <div class="column">
+            <h2>Backlog</h2>
+
+            <div class="card">
+                <h3>Nulla volutpat aliquam velit</h3>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat ar ..</p>
+                <div class="card-footer">
+                    <span class="avatar blue">OZ</span>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Facilisis in pretium nisl aliquet</h3>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat ar ..</p>
+                <div class="card-footer">
+                    <span class="avatar pink">LE</span>
+                    <span class="date-red">Two days ago</span>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Eget porttitor lorem</h3>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat ar ..</p>
+                <div class="card-footer">
+                    <span class="avatar teal">ME</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Todo -->
+        <div class="column">
+            <h2>Todo</h2>
+
+            <div class="card">
+                <h3>Eget porttitor lorem</h3>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat ar ..</p>
+                <div class="card-footer">
+                    <span class="avatar purple">AM</span>
+                    <span class="date-purple">Today</span>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Consectetur adipiscing elit</h3>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat ar ..</p>
+                <div class="card-footer">
+                    <span class="avatar blue">OZ</span>
+                    <span class="date-green">In three days</span>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Nulla volutpat aliquam velit</h3>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat ar ..</p>
+                <div class="card-footer">
+                    <span class="avatar pink">LE</span>
+                    <span class="date-green">July 21</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Done -->
+        <div class="column">
+            <h2>Done</h2>
+
+            <div class="card">
+                <h3>Ac tristique libero volutpat at</h3>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat ar ..</p>
+                <div class="card-footer">
+                    <span class="avatar pink">LE</span>
+                    <span class="date-gray">A week ago</span>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Phasellus iaculis neque</h3>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat ar ..</p>
+                <div class="card-footer">
+                    <span class="avatar blue">OZ</span>
+                    <span class="date-gray">Last Tuesday</span>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Facilisis in pretium nisl aliquet</h3>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat ar ..</p>
+                <div class="card-footer">
+                    <span class="avatar purple">AM</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
