@@ -9,4 +9,4 @@ git clone https://github.com/DylanChua2001/ensign-assignment-1.git
 ```
 
 ## Run Locally
-Open `src/index.html` directly in your browser.  
+Open `src/design.html` directly in your browser.  
